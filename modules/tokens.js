@@ -11,6 +11,7 @@ const helpers = require('../lib/helpers');
 //Handler for tokens
 _tokens ={}
 
+// LOGIN
 //  method: post
 //  path:   /tokens
 //  payload:  (email* ,password*)
@@ -30,8 +31,8 @@ _tokens.post = function (data, callback) {
                     if (hashedPassword == userData.hashedPassword) {
 
                         //if valid,create a new tocken with a random name.Set the expiration date one hour i the future
-                        var tockenid = helpers.createRandomString(20);
-                        var expires = Date.now() + 1000 * 60 * 60;
+                        const tockenid = helpers.createRandomString(20);
+                        const expires = Date.now() + 1000 * 60 * 60;
 
                         var tokenObject = {
                             'email': email,
@@ -160,58 +161,46 @@ _tokens.put = function (data, callback) {
     });
 }
 
+// LOGOUT
 //  method: delete
 //  path:   /tokens
 //  payload:  none
 //  qurystring params: id*
 //  returns:    err / status code
 _tokens.delete = function (data, callback) {
-
     var token = typeof (data.headers.token) == 'string' && data.headers.token.trim().length == 20 ? data.headers.token.trim() : false;
-
     if (token) {
-
         _data.read('tokens', token, function (err, tokenData) {
-
             if (!err && tokenData) {
-
                 _data.delete('tokens', token, function (err) {
-
                     if (!err) {
-                        callback(false);
+                        callback(200, {'Error': false});
                     } else {
                         callback('500', {
                             'Error': 'Error delete a file'
                         });
                     }
-
                 });
-
             } else {
-
+                callback(403, {
+                    'Error': 'Not logged in'
+                });
             }
-
         });
-
     } else {
         callback('Error', {
             'Error': 'Missing required field'
         });
     }
-
-
-
 }
 
 // verify if a given id  is valid for the user
+// @TODO please require email later.
 _tokens.verifyToken = function (id, email, callback) {
-
-
     _data.read('tokens', id, function (err, tokenData) {
 
         if (!err && tokenData) {
-
-            if (tokenData.email == email.replace('_', '@') && tokenData.expires > Date.now()) {
+            if (tokenData.email === email && tokenData.expires > Date.now()) {
                 callback(true);
             } else {
                 callback(false);

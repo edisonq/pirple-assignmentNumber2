@@ -11,8 +11,17 @@ enviroments.staging = {
     'httpsPort': 3003,
     'envName': 'staging',
     'hashingSecret' : 'thisIsASecret',
-    'maxChecks': 5
+    'maxChecks': 5,
+    'stripe' : {
+        'publishablekey' : 'pk_test_gWlZUhm5cSluCZQD2k68EkDB',
+        'secretKey' : 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
+    },
+    'mailgun' : {
+        'domain' : 'sandbox05a72c66b36d47e081a510782fa516a3.mailgun.org',
+        'apiKey' : 'b6aa82aa09d71894d9987ee9b4617d69-e51d0a44-e84df94c'
+    }
 };
+
 
 // production environement
 enviroments.production = {
@@ -20,7 +29,15 @@ enviroments.production = {
     'httpsPort': 5001,
     'envName': 'production',
     'hashingSecret' : 'thisIsASecret',
-    'maxChecks': 5
+    'maxChecks': 5,
+    'stripe' : {
+        'publishablekey' : 'pk_test_gWlZUhm5cSluCZQD2k68EkDB',
+        'secretKey' : 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
+    },
+    'mailgun' : {
+        'domain' : 'sandbox05a72c66b36d47e081a510782fa516a3.mailgun.org',
+        'apiKey' : 'b6aa82aa09d71894d9987ee9b4617d69-e51d0a44-e84df94c'
+    }
 };
 
 // determine which environment was passed as a command line argument
