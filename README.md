@@ -47,20 +47,21 @@ $ NODE_ENV=production node app
 ./config.js
 ```
 Modify this both in staging and production:
-> 'httpPort': 3002,
->     'httpsPort': 3003,
->     'envName': 'staging',
->     'hashingSecret' : 'thisIsASecret',
->     'maxChecks': 5,
-> 'stripe' : {
->     'publishablekey' : 'pk_test_gWlZUhm5cSluCZQD2k68EkDB',
->         'secretKey' : 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
->     },
->     'mailgun' : {
->         'domain' : 'sandbox05a72c66b36d47e081a510782fa516a3.mailgun.org',
->         'apiKey' : 'b6aa82aa09d71894d9987ee9b4617d69-e51d0a44-e84df94c'
->     }
-
+```JSON
+ "httpPort": 3002,
+     "httpsPort": 3003,
+     'envName': 'staging',
+     'hashingSecret' : 'thisIsASecret',
+     'maxChecks': 5,
+ "stripe" : {
+     'publishablekey' : 'pk_test_gWlZUhm5cSluCZQD2k68EkDB',
+         'secretKey' : 'sk_test_BQokikJOvBiI2HlWgH4olfQ2'
+     },
+     'mailgun' : {
+         'domain' : 'sandbox05a72c66b36d47e081a510782fa516a3.mailgun.org',
+         'apiKey' : 'b6aa82aa09d71894d9987ee9b4617d69-e51d0a44-e84df94c'
+ }
+```
 # API Usage
 
 Here's the list of API.  
@@ -75,29 +76,29 @@ Required fields:
 - address (string)
 - tosAgreement (string)
 
-URL:
+URL and method:
 ```sh
-/users
+POST: http://localhost/users
 ```
-Method:
-```sh
-POST
-```
+
 POST Sample JSON body
-> {
->    "firstName": "jamers",
->    "lastName": "Smith",
->    "password": "thisIsAPassword",
->    "email": "someEmail@test.com",
->    "address": "another address, here, and now",
->    "tosAgreement": true
->}
-
-Header
-| Key | Value |
-| ------ | ------ |
-| Content-Type | application/json |
-
+```JSON
+{
+    "firstName": "jamers",
+    "lastName": "Smith",
+    "password": "thisIsAPassword",
+    "email": "someEmail@test.com",
+    "address": "another address, here, and now",
+    "tosAgreement": true
+}
+```
+CURL sample:
+```sh
+curl -H "Content-Type: application/json" \
+--request POST \
+--data '{ "firstName": "jamers", "lastName": "Smith", "password": "thisIsAPassword",  "email": "test@email.com",  "address": "another address, here, and now",     "tosAgreement": true }' \
+http://localhost:3002/users
+```
 ### Login or Token creation
 There are two ways to login:
 

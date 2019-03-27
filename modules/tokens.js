@@ -68,7 +68,7 @@ _tokens.post = function (data, callback) {
 
     } else {
         callback(400, {
-            'Error': 'MIssing required field'
+            'Error': 'Missing required field'
         })
     }
 }
