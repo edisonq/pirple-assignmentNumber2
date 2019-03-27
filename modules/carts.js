@@ -160,6 +160,7 @@ _carts.put = (data, callback) => {
 
     // optional
     let itemQty = typeof(data.payload.item_qty) == 'number' && data.payload.item_qty > 0 ? data.payload.item_qty : false
+    let itemTotalPrice = typeof(data.payload.item_total_price) == 'number' && data.payload.item_total_price > 0 ? data.payload.item_total_price : false
 
     if (email && cartId) {
         // get the token from the headers
@@ -175,6 +176,9 @@ _carts.put = (data, callback) => {
                         debug(itemQty)
                         if (itemQty) {
                             cartData.itemQty = itemQty
+                        }
+                        if (itemTotalPrice) {
+                            cartData.itemTotalPrice = itemTotalPrice
                         }
                        
                         // store new update

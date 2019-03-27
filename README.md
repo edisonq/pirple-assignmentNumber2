@@ -1,7 +1,29 @@
 # Pizza Delivery Company API
 
 [![N|Solid](https://s3.amazonaws.com/thinkific-import/116598/cYiInJ14QTexS1zdpeTV_logo5.png)](https://pirple.thinkific.com)
-
+# TABLE OF CONTENTS
+- [Technologies](https://github.com/edisonq/pirple-assignmentNumber2#technologies)
+- [Installation](https://github.com/edisonq/pirple-assignmentNumber2#installation)
+- [Configuration](https://github.com/edisonq/pirple-assignmentNumber2#configuration)
+- API Usage
+    - Create User: https://github.com/edisonq/pirple-assignmentNumber2#technologies
+    - Login or Token Creation: https://github.com/edisonq/pirple-assignmentNumber2#login-or-token-creation
+    - Update Token: https://github.com/edisonq/pirple-assignmentNumber2#login-or-token-creation
+    - Logout: https://github.com/edisonq/pirple-assignmentNumber2#logout-or-token-destruction
+    - Read or Get specific user information: https://github.com/edisonq/pirple-assignmentNumber2#logout-or-token-destruction
+    - Update user information: https://github.com/edisonq/pirple-assignmentNumber2#update-user-information
+    - Delete User: https://github.com/edisonq/pirple-assignmentNumber2#delete-user
+    - Create Menu: https://github.com/edisonq/pirple-assignmentNumber2#create-menu
+    - View one item in the menu: https://github.com/edisonq/pirple-assignmentNumber2#view-one-item-in-the-menu
+    - Get all menu: 
+    - add to cart
+    - show content cart
+    - show specific cart
+    - update content of user's cart
+    - delete specific cart
+    - checkout
+- Todos
+- License
 ### Technologies
   - nodejs v10.15.1
   - https://stripe.com/
@@ -66,9 +88,12 @@ Modify this both in staging and production:
  }
 ```
 # API Usage
-
 Here's the list of API.  
 OR you can easily import this to your [Postman](https://www.getpostman.com/collections/8ac98097055880f6fd80).
+
+API lists:
+- Create user
+- Read 
 
 ### Create User
 Required fields:
@@ -376,7 +401,208 @@ Sample Output:
     "itemSize": "Medium"
 }
 ```
+### Get all menu
+Required fields:
+- Header Token
+- Header Email
 
+Curl Sample:
+```sh
+curl -H "Content-Type: application/json" \
+-H "token: p9r4qt827g8v9klvxh3h" \
+-H "email: test@test.com" \
+--request GET \
+http://localhost:3002/menu
+```
+
+Sample output:
+```JSON
+[
+    {
+        "itemId": "4kna2vdxwacnazp97yic",
+        "itemName": "Menu 12",
+        "itemPrice": 12,
+        "itemSize": "Medium"
+    },
+    {
+        "itemId": "b1qost6fjpq7xfrmqnhw",
+        "itemName": "Menu 12",
+        "itemPrice": 12,
+        "itemSize": "Medium"
+    },
+    {
+        "itemId": "huznd9xxiju62udbi64y",
+        "itemName": "Menu 11",
+        "itemPrice": 11,
+        "itemSize": "Small"
+    }
+]
+```
+
+### Add to cart
+Curl Sample:
+```sh
+curl -H "Content-Type: application/json" \
+-H "token: p9r4qt827g8v9klvxh3h" \
+-H "email: test@test.com" \
+--data '{	"item_id": "0m3f3evii2arlie7p1ro",	"item_qty": 5,	"item_total_price": 500}' \
+--request POST \
+http://localhost:3002/cart
+```
+
+Sample Output:
+```JSON
+{
+    "Error": false
+}
+```
+
+### Show all content cart
+Required:
+- header token
+- header email
+
+Curl sample:
+```sh
+curl -H "Content-Type: application/json" \
+-H "token: p9r4qt827g8v9klvxh3h" \
+-H "email: test@test.com" \
+--request GET \
+http://localhost:3002/cart
+```
+
+Sample JSON output:
+```JSON
+{
+    "total": 1000,
+    "cartReturn": [
+        {
+            "cartId": "buxscznw4jpou4xq2rsmqnoq35eqmh7p8f0dg6quvoeohmfn08",
+            "email": "test@test.com",
+            "tokenId": "p9r4qt827g8v9klvxh3h",
+            "itemId": "0m3f3evii2arlie7p1ro",
+            "itemQty": 5,
+            "itemTotalPrice": 500,
+            "expires": 1553774362899
+        },
+        {
+            "cartId": "w7dbkvjr2lah9ivellnpi19wmvm76yocjfry74akw2d487ijk9",
+            "email": "test@test.com",
+            "tokenId": "p9r4qt827g8v9klvxh3h",
+            "itemId": "0m3f3evii2arlie7p1ro",
+            "itemQty": 5,
+            "itemTotalPrice": 500,
+            "expires": 1553776416332
+        }
+    ]
+}
+```
+
+### Show specific content of the cart
+Required:
+- cart_id (Params)
+- header token
+- header email
+
+Curl sample:
+```sh
+curl -H "Content-Type: application/json" \
+-H "token: p9r4qt827g8v9klvxh3h" \
+-H "email: test@test.com" \
+--request GET \
+http://localhost:3002/cart?cart_id=w7dbkvjr2lah9ivellnpi19wmvm76yocjfry74akw2d487ijk9
+```
+
+Sample JSON output:
+```JSON
+{
+    "cartId": "w7dbkvjr2lah9ivellnpi19wmvm76yocjfry74akw2d487ijk9",
+    "email": "test@test.com",
+    "tokenId": "p9r4qt827g8v9klvxh3h",
+    "itemId": "0m3f3evii2arlie7p1ro",
+    "itemQty": 5,
+    "itemTotalPrice": 500,
+    "expires": 1553776416332
+}
+```
+
+### Update content of a cart
+Required:
+- header token
+- header email
+- cart_id 
+- item_qty
+- itemTotalPrice
+
+Curl sample:
+```sh
+curl -H "Content-Type: application/json" \
+-H "token: p9r4qt827g8v9klvxh3h" \
+-H "email: test@test.com" \
+--request GET \
+http://localhost:3002/cart?cart_id=w7dbkvjr2lah9ivellnpi19wmvm76yocjfry74akw2d487ijk9
+```
+
+Sample JSON output:
+```JSON
+{
+    "Error": false
+}
+```
+
+### DELETE specific cart
+Required:
+- header token
+- header email
+- cart_id 
+
+Curl sample:
+```sh
+curl -H "Content-Type: application/json" \
+-H "token: p9r4qt827g8v9klvxh3h" \
+-H "email: test@test.com" \
+--data '{"cart_id": "buxscznw4jpou4xq2rsmqnoq35eqmh7p8f0dg6quvoeohmfn08"}' \
+--request DELETE \
+http://localhost:3002/cart
+```
+
+Sample JSON output:
+```JSON
+{
+    "Error": false
+}
+```
+
+### Checkout
+Required:
+- tokenId header
+- email header
+- number
+- exp_month
+- exp_year 
+- cvc
+
+Optional:
+- amount
+- currency
+- description
+
+Curl sample:
+```sh
+curl -H "Content-Type: application/json" \
+-H "token: p9r4qt827g8v9klvxh3h" \
+-H "email: test@test.com" \
+--data '{"number" : "4242424242424242", "exp_month" : "12", "exp_year" : "2020",  "cvc" : "123",   "amount": 50,   "description": "some sample description"}' \
+--request POST \
+http://localhost:3002/checkout
+```
+
+Sample JSON output:
+```JSON
+{
+    "Error": false
+}
+```
 
 ### Todos
 
