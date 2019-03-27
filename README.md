@@ -15,15 +15,15 @@
     - Delete User: https://github.com/edisonq/pirple-assignmentNumber2#delete-user
     - Create Menu: https://github.com/edisonq/pirple-assignmentNumber2#create-menu
     - View one item in the menu: https://github.com/edisonq/pirple-assignmentNumber2#view-one-item-in-the-menu
-    - Get all menu: 
-    - add to cart
-    - show content cart
-    - show specific cart
-    - update content of user's cart
-    - delete specific cart
-    - checkout
-- Todos
-- License
+    - Get all menu: https://github.com/edisonq/pirple-assignmentNumber2#get-all-menu
+    - add to cart:https://github.com/edisonq/pirple-assignmentNumber2#add-to-cart
+    - show content cart: https://github.com/edisonq/pirple-assignmentNumber2#show-all-content-cart
+    - show specific cart: https://github.com/edisonq/pirple-assignmentNumber2#show-specific-content-of-the-cart
+    - update content of user's cart: https://github.com/edisonq/pirple-assignmentNumber2#update-content-of-a-cart
+    - delete specific cart: https://github.com/edisonq/pirple-assignmentNumber2#delete-specific-cart
+    - checkout: https://github.com/edisonq/pirple-assignmentNumber2#checkout
+- [Todos](https://github.com/edisonq/pirple-assignmentNumber2#todos)
+- [License](https://github.com/edisonq/pirple-assignmentNumber2#license)
 ### Technologies
   - nodejs v10.15.1
   - https://stripe.com/
@@ -590,9 +590,9 @@ Optional:
 Curl sample:
 ```sh
 curl -H "Content-Type: application/json" \
--H "token: p9r4qt827g8v9klvxh3h" \
+-H "token: imj1xdeqxtxsxoaf1kep" \
 -H "email: test@test.com" \
---data '{"number" : "4242424242424242", "exp_month" : "12", "exp_year" : "2020",  "cvc" : "123",   "amount": 50,   "description": "some sample description"}' \
+--data '{"number" : "4242424242424242",    "exp_month" : "12",    "exp_year" : "2020",    "cvc" : "123",    "amount": 50,    "description": "some sample description"}' \
 --request POST \
 http://localhost:3002/checkout
 ```
