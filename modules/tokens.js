@@ -6,7 +6,8 @@
 // Dependencies
 const _data = require('../lib/data');
 const helpers = require('../lib/helpers');
-
+const util = require('util')
+const debug = util.debuglog('tokens')
 
 //Handler for tokens
 _tokens ={}
@@ -81,7 +82,7 @@ _tokens.post = function (data, callback) {
 _tokens.get = function (data, callback) {
 
     // check that the email  provided is valid
-    var id = typeof (data.queryStringObject.id) == 'string' && data.queryStringObject.id.length == 20 ? data.queryStringObject.id : false;
+    var id = typeof (data.queryStringObject.id) == 'string' && data.queryStringObject.id.trim().length == 20 ? data.queryStringObject.id.trim() : false;
 
     if (id) {
 
@@ -120,8 +121,8 @@ _tokens.put = function (data, callback) {
     var extend = typeof (data.payload.extend) == 'booleans' && data.payload.extend == true ? true : false;
 
     // Lookup the token
-    _data.read('read', id, function (err, tokenData) {
-
+    _data.read('tokens', id, function (err, tokenData) {
+        debug(tokenData)
         if (!err && tokenData) {
 
             // check to make sure token isn't already expired
@@ -136,28 +137,24 @@ _tokens.put = function (data, callback) {
 
                     if (!err) {
 
-                        callback(200);
+                        callback(200, {'Error': false});
 
                     } else {
                         callback(500, {
                             'Error': 'Could not update the token\'s expiration'
                         });
                     }
-
                 })
             } else {
                 callback(400, {
                     'Error': 'The Token has already expired, and can not be extended'
                 });
             }
-
         } else {
             callback(400, {
                 'Error': 'The specified token does not exist'
             });
         }
-
-
     });
 }
 

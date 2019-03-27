@@ -16,11 +16,14 @@ Install the dependencies and devDependencies and start the server.
 $ node index.js 
 ```
 You will see this:
-> Background workers are running
-> http server:  3002
-> http in this enviroment:  staging
-> https server:  3003
-> https in this enviroment:  staging
+```sh
+Background workers are running
+http server:  3002
+http in this enviroment:  staging
+https server:  3003
+https in this enviroment:  staging
+```
+
 #### NODE_DEBUG
 
 You can debug by modules.
@@ -47,7 +50,7 @@ $ NODE_ENV=production node app
 ./config.js
 ```
 Modify this both in staging and production:
-```JSON
+```sh
  "httpPort": 3002,
      "httpsPort": 3003,
      'envName': 'staging',
@@ -78,7 +81,7 @@ Required fields:
 
 URL and method:
 ```sh
-POST: http://localhost/users
+POST: /users
 ```
 
 POST Sample JSON body
@@ -99,6 +102,18 @@ curl -H "Content-Type: application/json" \
 --data '{ "firstName": "jamers", "lastName": "Smith", "password": "thisIsAPassword",  "email": "test@email.com",  "address": "another address, here, and now",     "tosAgreement": true }' \
 http://localhost:3002/users
 ```
+
+Successful output:
+```sh
+{"Error":false}
+```
+
+Error outputs:
+- {'Error': 'Missing required fields'}
+- {'Error': 'A user with that email already exist'}
+- {'Error': 'Could not hash user'}
+- {'Error': 'Could not create the new user'}
+
 ### Login or Token creation
 There are two ways to login:
 
@@ -116,15 +131,55 @@ Required fields:
 - password
 
 JSON body example
-> {
->  "email": "test@test.com",
->  "password": "thisIsAPassword"
->}
+```JSON
+{
+ "email": "test@test.com",
+ "password": "thisIsAPassword"
+}
+```
+CURL sample:
+```sh
+curl -H "Content-Type: application/json" \
+--request POST \
+--data '{"email":"test@test.com","password":"thisIsAPassword"}' \
+http://localhost:3002/login
+```
+Successful output:
+```sh
+{
+    "email": "test@test.com",
+    "id": "y3oqyjsa3ygqa7uyv9n5",
+    "expires": 1553679149063
+}
+```
+Error outputs:
+- {'Error': 'Missing required field'}
+- {'Error': 'Missing  require token header, or token is invalid'}
+- {'Error':'Could not find the specified user'}
+- {'Error': 'Could not delete the specified user'}
+- {'Error': 'Could not find specified email'}
 
-Header example:
-| Key | Value |
-| ------ | ------ |
-| Content-Type | application/json |
+### Update token
+Required fields:
+- id (tokenid)
+
+URL:
+```sh
+PUT: /tokens
+```
+
+CURL sample:
+```sh
+curl -H "Content-Type: application/json" \
+--data '{"id": "mavqldpcqbypd8u65fck"}' \
+--request PUT \
+http://localhost:3002/tokens
+```
+Output:
+- {'Error': false}
+- {'Error': 'Could not update the token\'s expiration'}
+- {'Error': 'The Token has already expired, and can not be extended'}
+- {'Error': 'The specified token does not exist'}
 
 ### Logout or Token destruction
 There are two ways to logout:
@@ -138,20 +193,31 @@ GET: /logout
 ```
 
 Required fields:
-- email
-- password
+- email in header
+- token in header
 
-JSON body example
-> {
->  "email": "test@test.com",
->  "password": "thisIsAPassword"
->}
+CURL sample:
+```sh
+curl -H "Content-Type: application/json" \
+-H "token: r9rpfhsep3mbfd1nrsbh" \
+-H "email: test@test.com" \
+--request POST \
+http://localhost:3002/logout
+```
 
-Header example:
-| Key | Value |
-| ------ | ------ |
-| Content-Type | application/json |
+Sample output:
+```sh
+{
+    "Error": false
+}
+```
 
+Error outputs:
+- {'Error': 'Missing required field'}
+- {'Error': 'Missing  require token header, or token is invalid'}
+- {'Error':'Could not find the specified user'}
+- {'Error': 'Could not delete the specified user'}
+- {"Error": "Not logged in"}
 
 ### Read or Get specific user information
 Required fields:
@@ -160,20 +226,32 @@ Required fields:
 
 URL:
 ```sh
-/users
+GET: /users
 ```
 
-Method:
+CURL sample:
 ```sh
-GET
+curl -H "Content-Type: application/json" \
+-H "token: r9rpfhsep3mbfd1nrsbh" \
+-H "email: test@test.com" \
+--request PUT \
+http://localhost:3002/users
 ```
-
-Example header information:
-| Key | Value |
-| ------ | ------ |
-| Content-Type | application/json |
-| token | k8p94nd7e1hukta6vhqd |
-| email | email@test.com |
+Sample output:
+```json
+{
+    "id": "vy6ko00057hgbrtr5g3g",
+    "firstName": "just another test",
+    "lastName": "Smith",
+    "address": "another address, here, and now",
+    "email": "test@test.com",
+    "tosAgreement": true
+}
+```
+Error:
+- {'Error': 'Missing required field'}
+- {'Error': 'Missing  require token header, or token is invalid'}
+- {'Error': 'Could not find user'}
 
 ### Update user information
 Required fields:
@@ -187,45 +265,57 @@ Optional fields:
 
 URL:
 ```sh
-/users
+PUT: /users
 ```
-Method:
+CURL sample:
 ```sh
-PUT
+curl -H "Content-Type: application/json" \
+-H "token: it15fpf4kcy9jci46lp0" \
+-H "email: test@test.com" \
+--data '{"firstName": "just another test"}' \
+--request PUT \
+http://localhost:3002/users
 ```
-Example header information:
-| Key | Value |
-| ------ | ------ |
-| Content-Type | application/json |
-| token | k8p94nd7e1hukta6vhqd |
-| email | email@test.com |
-
 JSON body example:
-> {
->     "firstName": "just another test"
->}
+```json
+{
+     "firstName": "just another test"
+}
+```
+Error:
+- {'Error': 'Missing required field'}
+- {'Error': 'Missing field update'}
+- {'Error': 'Missing  require token header, or token is invalid'}
+- {'Error': 'The specified user does not exist'}
+- {'Error': 'Could not update the user'}
+- {'Error': false}
+
 ### Delete User
 Required fields:
 - Token header
-- Email
+- Token Email
+- Email to delete (user)
+
 URL:
 ```sh
-/users
+DELETE: /users
 ```
-Method:
+JSON sample body:
+```json
+{
+ "email": "test@test.com",
+}
+```
+Curl:
 ```sh
-DELETE
+curl -H "Content-Type: application/json" \
+-H "token: it15fpf4kcy9jci46lp0" \
+-H "email: test@test.com" \
+--data '{"email": "test@test.com}' \
+--request DELETE \
+http://localhost:3002/users
 ```
 
-Example header information:
-| Key | Value |
-| ------ | ------ |
-| Content-Type | application/json |
-| token | k8p94nd7e1hukta6vhqd |
-JSON body example
-> {
->  "email": "test@test.com",
->}
 
 ### Create menu
 Required fields:
@@ -237,18 +327,23 @@ URL and method:
 ```sh
 POST: /menu
 ```
-Example header information:
-| Key | Value |
-| ------ | ------ |
-| Content-Type | application/json |
-| token | k8p94nd7e1hukta6vhqd |
-| email | email@test.com |
+Curl:
+```sh
+curl -H "Content-Type: application/json" \
+-H "token: it15fpf4kcy9jci46lp0" \
+-H "email: test@test.com" \
+--data '{"item_name" : "Menu 12","item_price" : 12,"item_size" : "Medium"}' \
+--request POST \
+http://localhost:3002/menu 
+```
 JSON body example
-> {
->  "item_name": "Menu 1",
->  "item_price": "12,
->  "item_size": "12
->}
+```JSON
+{
+ "item_name": "Menu 1",
+ "item_price": "12,
+ "item_size": "12
+}
+```
 ### View one item in the menu
 Required fields:
 - Header Token
@@ -256,18 +351,31 @@ Required fields:
 
 URL and method:
 ```sh
-GET: /menu
+GET: /menu?item_id=<item_id>
 ```
-Example header information:
-| Key | Value |
-| ------ | ------ |
-| Content-Type | application/json |
-| token | k8p94nd7e1hukta6vhqd |
-| email | email@test.com |
+Sample URL:
+```url
+?item_id=4kna2vdxwacnazp97yic
+```
+Curl:
+```sh
+curl -H "Content-Type: application/json" \
+-H "token: it15fpf4kcy9jci46lp0" \
+-H "email: test@test.com" \
+--data '{"item_name" : "Menu 12","item_price" : 12,"item_size" : "Medium"}' \
+--request GET \
+http://localhost:3002/menu?item_id=4kna2vdxwacnazp97yic
+```
 
-Sample output JSON:
-> 
-
+Sample Output:
+```JSON
+{
+    "itemId": "4kna2vdxwacnazp97yic",
+    "itemName": "Menu 12",
+    "itemPrice": 12,
+    "itemSize": "Medium"
+}
+```
 
 
 ### Todos
